@@ -92,9 +92,9 @@
           </div>
         {% endif %}
         <div class="well span6 offset2">
-          <form class='form-stacked' id='sign-up-form'>
+          <form class='form-stacked' id='sign-up-form' method='POST' action='/accounts/signup/'>
             <h2>Sign Up for Free</h2>
-            
+            {% csrf_token %}
             <div class='cleaner_h20'></div>
             
             <div class="clearfix">
