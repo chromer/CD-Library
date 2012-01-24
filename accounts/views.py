@@ -3,9 +3,12 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def login_user(request):
+    if request.user.is_active:
+        return HttpResponseRedirect('/diary/today/')
     msgs = []
     if request.method == 'POST':
         username = request.POST['username_in']
@@ -14,7 +17,7 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/admin/')
+                return HttpResponseRedirect('/diary/today/')
             else:
                 msgs.append('Your account is disabled. Please contact\
                         site admin to restart it.')
@@ -51,3 +54,10 @@ def signup(request):
                 RequestContext(request, context))
     else:
         raise Http404
+
+
+@login_required
+def profile(request):
+    context = {}
+    return render_to_response('profile.html', RequestContext(request, context))
+

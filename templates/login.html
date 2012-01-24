@@ -150,7 +150,7 @@
         </div>
         
         <div class="well span5">
-          <form class='form-stacked' id='sign-in-form' method='POST' action=''>
+          <form class='form-stacked' id='sign-in-form' method='POST' action='/accounts/login/'>
             <h2>Sign In</h2>
             {% csrf_token %}
             
@@ -216,6 +216,7 @@
             <div class='cleaner_h20'></div>
             <input type='submit' value='Remind me &raquo;' id='submit_pwd' name='submit_pwd' class="btn primary"/>
           </form>
+
         </div>
       </div>
       <div class='cleaner'></div>

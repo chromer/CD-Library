@@ -101,4 +101,5 @@ INSTALLED_APPS = (
     'south',
     'accounts',
     'cd_library',
+    'diary',
 )
