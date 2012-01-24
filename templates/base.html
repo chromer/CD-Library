@@ -100,7 +100,7 @@
           </form>
           
           <ul class="nav secondary-nav">
-            <li><a href="#">Welcome Guest!</a></li>
+            <li><a href="#">Welcome {{user}}!</a></li>
           </ul>
         </div>
       </div>
@@ -117,10 +117,20 @@
         </div>
         <div class="row">
           <div class="span10">
-			{% block main-content %}
-            <h2>Main content</h2>
-			{% endblock %}
+          {% if msgs %}
+          <div class="span9 offset1">
+            {% for msg in msgs %}
+              <div class="alert-message warning">
+                <a class="close" href="#" onclick="close_notification(this); return false;">×</a>
+                <p><strong>Error:</strong> {{msg}}</p>
+              </div>
+            {% endfor %}
           </div>
+        {% endif %}
+			  {% block main-content %}
+          <h2>Main content</h2>
+			  {% endblock %}
+      </div>
 		  <div class="span4">
 			{% block sidebar %}
             <h3>Secondary content</h3>
@@ -140,6 +150,49 @@
       </footer>
 
     </div> <!-- /container -->
+    <script type='text/javascript'>
+      // Code snippet for ajax
+      $(document).ajaxSend(function(event, xhr, settings) {
+          function getCookie(name) {
+              var cookieValue = null;
+              if (document.cookie && document.cookie != '') {
+                  var cookies = document.cookie.split(';');
+                  for (var i = 0; i < cookies.length; i++) {
+                      var cookie = jQuery.trim(cookies[i]);
+                      // Does this cookie string begin with the name we want?
+                      if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                          break;
+                      }
+                  }
+              }
+              return cookieValue;
+          }
+          function sameOrigin(url) {
+              // url could be relative or scheme relative or absolute
+              var host = document.location.host; // host + port
+              var protocol = document.location.protocol;
+              var sr_origin = '//' + host;
+              var origin = protocol + sr_origin;
+              // Allow absolute or scheme relative URLs to same origin
+              return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                  (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                  // or any other URL that isn't scheme relative or absolute i.e relative.
+                  !(/^(\/\/|http:|https:).*/.test(url));
+          }
+          function safeMethod(method) {
+              return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+          }
+
+          if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+          }
+      });
+      
+      function close_notification(obj) {
+        $(obj).parent().slideUp('slow');
+      }
+    </script>
 	{% block script %}
 	{% endblock %}
   </body>
