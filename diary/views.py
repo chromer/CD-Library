@@ -7,13 +7,16 @@ from django.http import Http404, HttpResponse
 from models import Event
 from forms import EventForm
 
+def get_begining(date):
+    d = date.date()
+    t = datetime.time(0, 0, 0)
+    return datetime.datetime.combine(d, t)
+
 
 @login_required
 def today(request):
     form = EventForm()
-    d = datetime.date.today()
-    t = datetime.time(0, 0, 0)
-    today = datetime.datetime.combine(d, t)
+    today = get_begining(datetime.datetime.now())
     events = Event.objects.filter(author=request.user).filter(
             timestamp__gt=today)
     context = {
@@ -29,12 +32,14 @@ def today(request):
                 event.save()
                 context['msgs'] = ['Event added successfully.',]
             except:
-                context['msgs'] = ['Some error occured. Please enter valid data.',]
+                context['msgs'] = ['Some error occured. Please enter \
+                        valid data.',]
                 context['form'] = form
         else:
             context['msgs'] = ['Error: You must enter a title.',]
             context['form'] = form
-    return render_to_response('diary/today.html', RequestContext(request, context))
+    return render_to_response('diary/today.html',
+            RequestContext(request, context))
 
 
 @login_required
@@ -51,3 +56,4 @@ def plus_or_minus(request):
         return HttpResponse(msg)
     else:
         raise Http404
+
