@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -40,7 +40,8 @@ def signup(request):
                 try:
                     user = User.objects.create_user(username, email, password)
                     user.save()
-                    return HttpResponseRedirect('/admin/')
+                    login(request, user)
+                    return HttpResponseRedirect('/diary/today')
                 except:
                     msgs.append('Some error occured in createing the new user')
             else:
@@ -61,3 +62,6 @@ def profile(request):
     context = {}
     return render_to_response('profile.html', RequestContext(request, context))
 
+def logout_user(request):
+    logout(request)
+    return HttpResponseRedirect('/accounts/login')
