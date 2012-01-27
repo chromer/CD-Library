@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block heading %}Search{% endblock%}
+{% block sub-heading %}Here are your search results.{% endblock%}
+{% block main-content %}
+  {% if events %}
+    {% for event in events %}
+    <div class="row">
+      <div class="span9">
+        <div class="alert-message info">
+          <p><strong>{{event.title}}</strong></p>
+          <p>{{event.description}}</p>
+        </div>
+      </div>
+    </div>
+    <p>Added on {{event.get_datetime}}</p>
+    <hr />
+    {% endfor %}
+  {% else %}
+    <div class="alert-message block-message warning">
+      <p>There are no posts for today. Please add one.</p>
+    </div>
+  {% endif %}
+{% endblock%}

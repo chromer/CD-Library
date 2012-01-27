@@ -3,7 +3,8 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.db.models import Q
 from models import Event
 from forms import EventForm
 
@@ -57,3 +58,20 @@ def plus_or_minus(request):
     else:
         raise Http404
 
+@login_required
+def search_events(request):
+    if request.method == 'POST':
+        q = request.POST['q']
+        q = q.strip()
+        if q:
+            events = Event.objects.filter(author=request.user).filter(
+                    Q(title__icontains=q) |
+                    Q(description__icontains=q)).order_by('-timestamp')[:15]
+            context = {
+                    'events': events,
+            }
+            return render_to_response('diary/search.html', RequestContext(request, context))
+        else:
+            return HttpResponseRedirect('/diary/today')
+    else:
+        raise Http404

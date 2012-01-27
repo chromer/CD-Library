@@ -16,6 +16,9 @@ class Event(models.Model):
     def get_time(self):
         return self.timestamp.strftime('%I:%M %p')
 
+    def get_datetime(self):
+        return self.timestamp.strftime('%c')
+
     def __unicode__(self):
         return '%s- %s on %s'%(self.author.username, self.title, self.timestamp.date())
 
