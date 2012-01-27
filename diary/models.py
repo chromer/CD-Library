@@ -13,6 +13,9 @@ class Event(models.Model):
     def get_ups(self):
         return self.ups.all().count()
 
+    def get_time(self):
+        return self.timestamp.strftime('%I:%M %p')
+
     def __unicode__(self):
         return '%s- %s on %s'%(self.author.username, self.title, self.timestamp.date())
 
